@@ -1,20 +1,14 @@
---[[ 
-    2WINSS PREMIUM V4.1
-    - 50 Unique Keys (3 Days logic ready)
-    - Username Binding
-    - Ultra Smooth UI
-]]
-
 repeat task.wait() until game:IsLoaded()
 
 local Players = game:GetService("Players")
-local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 local CoreGui = game:GetService("CoreGui")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local LocalPlayer = Players.LocalPlayer
 
--- БАЗА ИЗ 50 НОВЫХ КЛЮЧЕЙ
+-- БАЗА КЛЮЧЕЙ (50 ШТУК)
 local KEYS = {
     ["2W-X9A2-L5P8-Q1M7"] = true, ["2W-B4V9-C0X1-Z2A3"] = true, ["2W-N6M7-B8V9-C0X1"] = true, ["2W-S4D5-F6G7-H8J9"] = true,
     ["2W-K0L1-W2Q3-E4R5"] = true, ["2W-T6Y7-U8I9-O0P1"] = true, ["2W-A2S3-D4F5-G6H7"] = true, ["2W-J8K9-L0M1-N2B3"] = true,
@@ -32,17 +26,17 @@ local KEYS = {
 }
 
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "2WINSS_SYSTEM"
+ScreenGui.Name = "2WINSS_V4_FINAL"
 ScreenGui.Parent = CoreGui
-ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
 
--- UI Notify Function
-local function SendNotify(txt, color)
+-- Уведомления
+local function Notify(text, color)
     local n = Instance.new("TextLabel", ScreenGui)
     n.Size = UDim2.new(0, 300, 0, 30)
     n.Position = UDim2.new(0.5, -150, 0.8, 0)
     n.BackgroundTransparency = 1
-    n.Text = txt
+    n.Text = text
     n.TextColor3 = color or Color3.fromRGB(255, 255, 255)
     n.Font = Enum.Font.GothamBold
     n.TextSize = 14
@@ -54,74 +48,204 @@ local function SendNotify(txt, color)
     end)
 end
 
--- LOGIN FRAME
+-- ОКНО ЛОГИНА
 local Login = Instance.new("Frame", ScreenGui)
 Login.Size = UDim2.new(0, 320, 0, 190)
 Login.Position = UDim2.new(0.5, -160, 0.4, 0)
 Login.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 Login.BorderSizePixel = 0
 Instance.new("UICorner", Login)
+local LoginStroke = Instance.new("UIStroke", Login)
+LoginStroke.Color = Color3.fromRGB(100,100,100)
+LoginStroke.Thickness = 2
 
-local KeyInput = Instance.new("TextBox", Login)
-KeyInput.Size = UDim2.new(0.8, 0, 0, 45)
-KeyInput.Position = UDim2.new(0.1, 0, 0.25, 0)
-KeyInput.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-KeyInput.PlaceholderText = "PASTE KEY HERE"
-KeyInput.Text = ""
-KeyInput.TextColor3 = Color3.fromRGB(255, 255, 255)
-KeyInput.Font = Enum.Font.Gotham
-Instance.new("UICorner", KeyInput)
+local CloseLogin = Instance.new("TextButton", Login)
+CloseLogin.Size = UDim2.new(0, 30, 0, 30)
+CloseLogin.Position = UDim2.new(1, -35, 0, 5)
+CloseLogin.BackgroundTransparency = 1
+CloseLogin.Text = "×"
+CloseLogin.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseLogin.TextSize = 25
+CloseLogin.MouseButton1Click:Connect(function() ScreenGui:Destroy() end)
+
+local KeyBox = Instance.new("TextBox", Login)
+KeyBox.Size = UDim2.new(0.8, 0, 0, 45)
+KeyBox.Position = UDim2.new(0.1, 0, 0.3, 0)
+KeyBox.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+KeyBox.PlaceholderText = "ENTER KEY..."
+KeyBox.Text = ""
+KeyBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+KeyBox.Font = Enum.Font.Gotham
+Instance.new("UICorner", KeyBox)
 
 local ActivateBtn = Instance.new("TextButton", Login)
 ActivateBtn.Size = UDim2.new(0.8, 0, 0, 45)
-ActivateBtn.Position = UDim2.new(0.1, 0, 0.6, 0)
-ActivateBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-ActivateBtn.Text = "ACTIVATE SCRIPT"
+ActivateBtn.Position = UDim2.new(0.1, 0, 0.65, 0)
+ActivateBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+ActivateBtn.Text = "ACTIVATE"
 ActivateBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 ActivateBtn.Font = Enum.Font.GothamBold
+ActivateBtn.ZIndex = 5
 Instance.new("UICorner", ActivateBtn)
 
--- MAIN MENU (HIDDEN)
+-- ГЛАВНОЕ МЕНЮ (СКРЫТО)
 local Main = Instance.new("Frame", ScreenGui)
 Main.Size = UDim2.new(0, 240, 0, 400)
 Main.Position = UDim2.new(0.5, -120, 0.45, 0)
 Main.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 Main.Visible = false
 Instance.new("UICorner", Main)
+local MainStroke = Instance.new("UIStroke", Main)
+MainStroke.Thickness = 2
+local StrokeGrad = Instance.new("UIGradient", MainStroke)
+
+local Header = Instance.new("Frame", Main)
+Header.Size = UDim2.new(1, 0, 0, 35)
+Header.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Header.BackgroundTransparency = 0.1
+Instance.new("UICorner", Header)
+local HeaderGrad = Instance.new("UIGradient", Header)
+
+local Title = Instance.new("TextLabel", Header)
+Title.Size = UDim2.new(1, -40, 1, 0)
+Title.Position = UDim2.new(0, 10, 0, 0)
+Title.Text = "2WINSS @filz1yesss-F"
+Title.Font = Enum.Font.GothamBlack
+Title.TextSize = 12
+Title.BackgroundTransparency = 1
+Title.TextXAlignment = Enum.TextXAlignment.Left
 
 local UserTag = Instance.new("TextLabel", Main)
-UserTag.Size = UDim2.new(0, 100, 0, 20)
-UserTag.Position = UDim2.new(1, -110, 1, -25)
+UserTag.Size = UDim2.new(0, 150, 0, 20)
+UserTag.Position = UDim2.new(1, -155, 1, -25)
 UserTag.BackgroundTransparency = 1
-UserTag.Text = LocalPlayer.Name
-UserTag.TextColor3 = Color3.fromRGB(100, 100, 100)
+UserTag.Text = "User: " .. LocalPlayer.Name
+UserTag.TextColor3 = Color3.fromRGB(150, 150, 150)
 UserTag.Font = Enum.Font.GothamItalic
 UserTag.TextSize = 10
+UserTag.TextXAlignment = Enum.TextXAlignment.Right
 
--- АКТИВАЦИЯ
+local Container = Instance.new("ScrollingFrame", Main)
+Container.Size = UDim2.new(1, -16, 1, -80)
+Container.Position = UDim2.new(0, 8, 0, 45)
+Container.BackgroundTransparency = 1
+Container.ScrollBarThickness = 0
+Instance.new("UIListLayout", Container).Padding = UDim.new(0, 6)
+
+-- ФУНКЦИИ
+local function CreateButton(text, sub)
+    local B = Instance.new("TextButton", Container)
+    B.Size = UDim2.new(1, -4, 0, 42)
+    B.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    B.BackgroundTransparency = 0.6
+    B.Text = text
+    B.TextColor3 = Color3.fromRGB(255, 255, 255)
+    B.Font = Enum.Font.GothamBold
+    Instance.new("UICorner", B)
+    if sub then
+        local st = Instance.new("TextLabel", B)
+        st.Size = UDim2.new(1, 0, 0, 10)
+        st.Position = UDim2.new(0, 0, 1, -12)
+        st.BackgroundTransparency = 1
+        st.Text = sub
+        st.TextColor3 = Color3.fromRGB(180, 180, 180)
+        st.Font = Enum.Font.Gotham
+        st.TextSize = 8
+    end
+    return B
+end
+
+local WallBtn = CreateButton("DESTROY WALLS", "Press L to Toggle")
+local DevBtn = CreateButton("FPS DEVOURER (V12)", "Lags the server")
+local StatsBtn = CreateButton("FPS: 0 | PING: 0", "Network Info")
+
+-- ТЕМЫ
+local ThemeCont = Instance.new("Frame", Container)
+ThemeCont.Size = UDim2.new(1, 0, 0, 30)
+ThemeCont.BackgroundTransparency = 1
+
+local function ApplyTheme(c1, c2, bg)
+    Main.BackgroundColor3 = bg
+    MainStroke.Color = c1
+    HeaderGrad.Color = ColorSequence.new(c1, c2)
+    StrokeGrad.Color = HeaderGrad.Color
+end
+
+local function MakeTheme(col, pos, name)
+    local b = Instance.new("TextButton", ThemeCont)
+    b.Size = UDim2.new(0.3, 0, 1, 0)
+    b.Position = pos
+    b.BackgroundColor3 = col
+    b.Text = ""
+    Instance.new("UICorner", b)
+    b.MouseButton1Click:Connect(function()
+        if name == "Red" then ApplyTheme(Color3.fromRGB(255,0,0), Color3.fromRGB(150,0,0), Color3.fromRGB(25,5,5))
+        elseif name == "Silver" then ApplyTheme(Color3.fromRGB(200,200,200), Color3.fromRGB(120,120,120), Color3.fromRGB(20,20,20))
+        elseif name == "Black" then ApplyTheme(Color3.fromRGB(60,60,60), Color3.fromRGB(0,0,0), Color3.fromRGB(5,5,5)) end
+    end)
+end
+MakeTheme(Color3.fromRGB(200,0,0), UDim2.new(0,0,0,0), "Red")
+MakeTheme(Color3.fromRGB(200,200,200), UDim2.new(0.35,0,0,0), "Silver")
+MakeTheme(Color3.fromRGB(50,50,50), UDim2.new(0.7,0,0,0), "Black")
+
+-- ЛОГИКА ФУНКЦИЙ
+local wallsRemoved = false
+local wallData = {}
+local function ToggleWalls()
+    wallsRemoved = not wallsRemoved
+    if wallsRemoved then
+        for _, v in pairs(workspace:GetDescendants()) do
+            if v:IsA("BasePart") and v.CanCollide and not v:IsDescendantOf(LocalPlayer.Character) then
+                wallData[v] = v.Parent; v.Parent = nil
+            end
+        end
+        WallBtn.Text = "RESTORE WALLS"
+    else
+        for p, pr in pairs(wallData) do if p then p.Parent = pr end end
+        wallData = {}; WallBtn.Text = "DESTROY WALLS"
+    end
+end
+WallBtn.MouseButton1Click:Connect(ToggleWalls)
+
+local devouring = false
+DevBtn.MouseButton1Click:Connect(function()
+    devouring = not devouring
+    DevBtn.TextColor3 = devouring and Color3.fromRGB(255, 50, 50) or Color3.fromRGB(255, 255, 255)
+    task.spawn(function()
+        while devouring do
+            for i = 1, 50 do
+                local r = ReplicatedStorage:FindFirstChild("RemoteEvent", true)
+                if r then r:FireServer(Vector3.new(0/0, 1/0, 0/0)) end
+            end
+            task.wait()
+        end
+    end)
+end)
+
+-- ПРОВЕРКА КЛЮЧА (АВТО-ЗАПУСК ГУИ)
 ActivateBtn.MouseButton1Click:Connect(function()
-    local input = KeyInput.Text
-    if KEYS[input] then
-        ActivateBtn.Text = "SUCCESS!"
-        ActivateBtn.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
-        task.wait(0.5)
+    if KEYS[KeyBox.Text] then
         TweenService:Create(Login, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.In), {Position = UDim2.new(0.5, -160, -1, 0)}):Play()
         task.wait(0.5)
         Login:Destroy()
         Main.Visible = true
-        SendNotify("Welcome, " .. LocalPlayer.Name, Color3.fromRGB(0, 255, 100))
+        ApplyTheme(Color3.fromRGB(200,200,200), Color3.fromRGB(120,120,120), Color3.fromRGB(20,20,20))
+        Notify("Welcome back, " .. LocalPlayer.Name, Color3.fromRGB(0, 255, 150))
     else
-        ActivateBtn.Text = "INVALID KEY"
-        ActivateBtn.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
-        task.wait(1)
-        ActivateBtn.Text = "ACTIVATE SCRIPT"
-        ActivateBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+        Notify("Invalid Key or Executor not supported!", Color3.fromRGB(255, 50, 50))
     end
 end)
 
--- Плавное скрытие на U
-UserInputService.InputBegan:Connect(function(io, gpe)
-    if not gpe and io.KeyCode == Enum.KeyCode.U and Main.Visible then
+RunService.RenderStepped:Connect(function(dt)
+    StatsBtn.Text = "FPS: "..math.floor(1/dt).." | PING: "..math.floor(LocalPlayer:GetNetworkPing()*1000).."ms"
+    HeaderGrad.Rotation = (HeaderGrad.Rotation + 2) % 360
+    StrokeGrad.Rotation = (StrokeGrad.Rotation + 2) % 360
+end)
+
+UserInputService.InputBegan:Connect(function(i, g)
+    if not g and i.KeyCode == Enum.KeyCode.U and Main.Visible then
         Main.Visible = not Main.Visible
+    elseif not g and i.KeyCode == Enum.KeyCode.L and Main.Visible then
+        ToggleWalls()
     end
 end)
